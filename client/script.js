@@ -10,6 +10,7 @@
 */
 
 // CODE HERE
+const sayHelloButton = document.querySelector('#say-hello-button');
 
 
 // PROBLEM 2
@@ -20,7 +21,10 @@
 */
 
 // CODE HERE
-
+function styleHello(event){
+    sayHelloButton.classList.add('new-style');
+    }
+    sayHelloButton.addEventListener('mouseover',styleHello);
 
 // PROBLEM 3
 /*
@@ -32,7 +36,10 @@
 */
 
 // CODE HERE
-
+function styleBack(event){
+    sayHelloButton.classList.remove('new-style');
+}
+sayHelloButton.addEventListener('mouseout',styleBack);
 
 // PROBLEM 4
 /*
@@ -53,7 +60,7 @@ const sayHello = () => {
 // DO NOT EDIT FUNCTION
 
 // CODE HERE
-
+sayHelloButton.addEventListener('click', sayHello)
 
 // PROBLEM 5 
 /*
@@ -68,6 +75,14 @@ const sayHello = () => {
 
 const ohMy = () => {
     // YOUR CODE HERE
+    axios.get('http://localhost:3000/animals')
+    .then(res => {
+        for( let i = 0; i<res.data.length; i++){
+            const newPara = document.createElement('p');
+            newPara.textContent=res.data[i];
+            document.querySelector('body').appendChild(newPara)
+        }
+    })
 }
 
 document.getElementById('animals-button').addEventListener('click', ohMy)
@@ -88,7 +103,15 @@ document.getElementById('animals-button').addEventListener('click', ohMy)
 
 const repeatMyParam = () => {
     //YOUR CODE HERE
+    axios.get('http://localhost:3000/repeat/sweet')
+    .then(res =>{
+        const repeatText = document.querySelector('#repeat-text');
+        repeatText.textContent=res.data;
+        repeatText.style.display='block';
+    })
 }
+let repeatButton = document.querySelector('#repeat-button');
+repeatButton.addEventListener('click', repeatMyParam);
 
 // PROBLEM 7
 /*
@@ -111,8 +134,14 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE
-
-
+function queryTest(){
+    axios.get('http://localhost:3000/query-test/?animal=monkey&person=callie')
+    .then(res => {
+        console.log(res.data);
+    })
+}
+const queryButton = document.querySelector('#query-button');
+queryButton.addEventListener('click', queryTest);
 
 ////////////////
 //INTERMEDIATE//
@@ -132,8 +161,9 @@ const repeatMyParam = () => {
     In the function that you wrote for Problem 8, change the URL to test a couple different scenarios. 
 
     1: Send no queries on the URL -- what happened? 
-
+    When I sent no queries, it responded with 'You sent an empty query!'
     2: Send more than 1 query on the URL -- what happened? 
+    When I sent multiple queries, it responded with 'You sent more than 1 query!'
 */
 
 // Edit code in Problem 8
@@ -164,3 +194,30 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE 
+const foodList = document.querySelector('#food-list');
+function createFood(event){
+    event.preventDefault();
+    const foodInput=document.querySelector('#food-input');
+    body ={
+        newFood:foodInput.value
+    };
+    axios.post('http://localhost:3000/food',body)
+    .then(res => {
+        const newPara=document.createElement('p');
+        newPara.textContent=res.data;
+        foodList.appendChild(newPara);
+        newPara.classList.add('list');
+    })
+}
+const foodForm=document.querySelector('#food-form');
+foodForm.addEventListener('submit', createFood);
+
+function clearList(event){
+    event.preventDefault();
+    const goAway = document.querySelectorAll('.list');
+    for(let i = 0; i<goAway.length; i++){
+    let unwantedFood=goAway[i];
+    }unwantedFood.remove();
+}
+const resetButton=document.querySelector('#clear-list');
+resetButton.addEventListener('click',clearList);
